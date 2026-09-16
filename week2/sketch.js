@@ -6,7 +6,7 @@ function setup() {
 }
 
 function draw() {
-  background();
+// empty for now
 }
 
 function mousePressed() {
@@ -26,11 +26,12 @@ let positions = [[width * 0.25, height * 0.25], [width * 0.75, height * 0.25], [
 let randomPositions = shuffle(positions);
 
 //sizes
+let maxSize = 180;
 let sizes = [0.5, 0.7, 0.85, 1];
 let randomSizes = shuffle(sizes);
 
 //draw background
-  background(randomBackgrounds[0]);
+  background((randomBackgroundColors[0]));
   noStroke();
 
 //rectangles
