@@ -70,9 +70,4 @@ fill(randomShapeColors[3]);
 rect(0, 0, maxSize, maxSize * 0.18);
 pop();
 
- 
-
-
-
-
 }
