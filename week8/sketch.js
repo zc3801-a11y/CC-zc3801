@@ -43,15 +43,6 @@ bubbleColors = [
   color(255, 220, 130, 130),
 ];
 
-for (let i = 0; i < 5; i++) {
-  bubbleList.push(
-    new Bubble(80, width - 80, 
-      random(150,height - 60), 
-      random(50, 110), 
-      random(bubbleColors)
-    )
-  );
-}
 }
 
 
