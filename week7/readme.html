@@ -36,19 +36,29 @@
 
 <body>
     <h1>Week 7 Projection Mapping</h1>
-    <p>I created an interactive sketch with pastel bubbles that slowly float upward. Clicking adds a new bubble using `push()`, while pressing the space bar removes the oldest bubble using `splice()`. Bubbles are also removed from the array once they leave the canvas. Each bubble is an instance of my Bubble class, which controls its appearance and movement. I chose soft colors and transparent overlapping shapes to create a calm, playful atmosphere where users can change the composition by adding and removing bubbles.</p>
+    <p>For the projection mapping project, we had our experiences in a different classroom. During our first session, it was exciting to see our digital sketches move beyond the laptop screen and become part of a physical space. However, we also experienced several technical problems. Some parts of the artwork were cropped because the projected image was larger than the available surface. Combining everyone’s code was also more difficult than I expected because different group members used different settings. For example, colorMode() changed how some colors appeared, while angleMode(DEGREES) affected sketches that were originally created with different angle settings. This made me realize that even when each sketch works correctly by itself, conflicts can happen when several projects are combined.
+    During our second session, the setup went much more smoothly because we already understood what had caused the earlier problems. I discovered that the size of the pg canvas did not match the 800 × 450 projection surface, so I used pg.scale() to resize the content and solve the cropping issue. After making this adjustment, the artwork fit the surface much better, and the different sketches worked together more successfully. I was happy with the final result, especially because the projection looked very different and more immersive at a large scale. We also took photos to document the finished work. Overall, this project taught me that projection mapping involves not only creating visuals, but also carefully testing scale, space, shared code settings, and how the work appears in the actual environment.</p>
     <p><a href="index.html" target="_blank">Link to sketch</a></p>
 
    <h2>Resources</h2>
    <ul>
-    <li><a href="https://docs.google.com/document/d/1ytFXckYigSr095CBdGtUypHKawH9RidCi1IyC_0nI1c/edit?tab=t.0#heading=h.ugxwhyv3tv4l" target="_blank">Melody Loveless' notes</a></li>
-    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/return" target="_blank">MDN: JavaScript return</a></li>
-    <li><a href="https://p5js.org/reference/p5/keyPressed/" target="_blank">Key Pressed() and return false</a></li>
-    
+    <li><a href="https://melodyloveless.github.io/creativeCoding_fall2026/week7/assignment.html" target="_blank">Melody Loveless' notes</a></li>
+    <li><a href="https://github.com/jdeboi/p5.mapper/tree/main/reference" target="_blank">p5.Mapper</a></li>
    </ul>
 
     <!--Replace with your own image-->
     <!--You can limit the size of your displayed image using "height" or "width" -->
-    <img src="./media/bubble.jpeg" height="500px" alt="This the alt description of this image. This is a picture of a cat."></img>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; max-width: 750px;">
+  <img src="./media/1.jpeg" alt="Projection mapping photo 1" style="width: 100%; height: auto;">
+  <img src="./media/2.jpeg" alt="Projection mapping photo 2" style="width: 100%; height: auto;">
+  <img src="./media/3.jpeg" alt="Projection mapping photo 3" style="width: 100%; height: auto;">
+  <img src="./media/4.jpeg" alt="Projection mapping photo 4" style="width: 100%; height: auto;">
+  <img src="./media/17.jpg" alt="Projection mapping photo 5" style="width: 100%; height: auto;">
+  <img src="./media/19.jpg" alt="Projection mapping photo 6" style="width: 100%; height: auto;">
+</div>
+
+<video controls style="display: block; width: 100%; max-width: 900px; margin-top: 16px;">
+  <source src="./media/video 2.mp4" type="video/mp4">
+</video>
 </body>
 </html>
