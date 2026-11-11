@@ -38,7 +38,7 @@ function setup() {
     quad4 = pMapper.createQuadMap(600,600);
     quad5 = pMapper.createQuadMap(800,450);
     // loads calibration in the "maps" directory
-    //pMapper.load("maps/map.json");
+    pMapper.load("maps/map.json");
 
     yuqianPG = createGraphics(500, 500);
 
