@@ -1,90 +1,143 @@
-let bubbleList = [];
-let bubbleColors = [];
+let mic;
+let amplitude;
+let startbutton;
+let micReady = false;
+let message = "Click Start to enable your microphone.";
 
-class Bubble {
-  constructor(x, y, s, c) {
-    this.x = x;
-    this.y = y;
-    this.s = s;
-    this.c = c;
-    this.speed = random(0.5, 1.5);
-  }
+let balloonsSize = 50;
+let warningSize = 175;
+let popSize = 230;
+let popped = false;
+let burstFrame = 0;
 
-//bubble body
-  display() {
-    stroke(this.c);
-    strokeWeight(2);
-    fill(this.c);
-    ellipse(this.x, this.y, this.s);
-  
-  //white highlight
-  noStroke();
-  fill(255, 190);
-  ellipse(
-    this.x - this.s * 0.2, 
-    this.y - this.s * 0.2, 
-    this.s * 0.16,
-    this.s * 0.25
-  );
-}
-
-floatUp() {
-  this.y -= this.speed;
- }
-}
+let quietLevel = 0.025;
+let strongLevel = 0.18;
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(600, 440);
+  textAlign(CENTER, CENTER);
 
-bubbleColors = [
-  color(255, 160, 195, 130),
-  color(140, 225, 200, 130),
-  color(145, 190, 255, 130),
-  color(255, 220, 130, 130),
-];
+  mic = new p5.AudioIn();
+  amplitude = new p5.Amplitude();
 
-for (let i = 0; i < 5; i++) {
-  bubbleList.push(
-    new Bubble(
-      random(80, width - 80), 
-      random(150,height - 60), 
-      random(50, 110), 
-      random(bubbleColors)
-    )
-  );
-}
+  startbutton = createButton("Start");
+  startbutton.parent("main");
+  startbutton.mousePressed(startOrReset);
 }
 
+async function startOrReset() {
+  if (micReady) {
+    balloonsSize = 50;
+    popped = false;
+    burstFrame = 0;
+    return;
+  }
 
-function draw() {
-  background(235, 228, 250);
-  for (let i = bubbleList.length - 1; i >= 0; i--) {
-    bubbleList[i].floatUp();
-    
-    if (bubbleList[i].y < -bubbleList[i].s / 2) {
-      bubbleList.splice(i, 1);
-    }
-}
-for (let i = 0; i < bubbleList.length; i++) {
-  bubbleList[i].display();
-}
-noStroke();
-fill(85, 70, 110);
-textSize(14);
-text("Click: add a bubble | Space: remove oldest", 20, 30);
-}
+  startbutton.attribute("disabled", "");
+  message = "Allow microphone access to start.";
 
-function mousePressed() {
-  if(mouseX >= 0 && mouseX < width && mouseY >= 0 && mouseY < height) {
-    bubbleList.push(
-      new Bubble(mouseX, mouseY, random(50, 110), random(bubbleColors))
-    );
+  try {
+    await userStartAudio();
+    mic.start(function () {
+      amplitude.setInput(mic);
+      micReady = true;
+      startbutton.html("Reset");
+      startbutton.removeAttribute("disabled");
+    }, showMicError);
+  } catch (err) {
+    showMicError();
   }
 }
 
-function keyPressed() {
-  if (key == " ") {
-    bubbleList.splice(0, 1);
-    return false; // prevent default behavior of space key (scrolling)
+function showMicError() {
+  message = "Check microphone permissions and try again.";
+  startbutton.removeAttribute("disabled");
+}
+
+function draw() {
+  background(249, 240, 219);
+
+  let blow = 0;
+  if (micReady) {
+    let level = amplitude.getLevel();
+    blow = constrain(map(level, quietLevel, strongLevel, 0, 1), 0, 1);
+  }
+
+  if (!popped) {
+    balloonsSize += blow * 2.5;
+
+    if (balloonsSize >= popSize) {
+      popped = true;
+    }
+  }
+
+  if (popped) {
+    drawBurst();
+    message = "Pop! Click Reset to try again.";
+  } else {
+    drawBalloons(blow);
+
+    if (micReady) {
+      message = "Blow into the microphone.";
+      if (balloonsSize >= warningSize) {
+        message = "Almost full. Stop here or keep blowing.";
+      }
+    }
+  }
+
+  noStroke();
+  fill(49, 29, 68);
+  textSize(25);
+  text("JUST ENOUGH AIR", width / 2, 38);
+  textSize(15);
+  text(message, width / 2, height - 26);
+}
+
+function drawBalloons(blow) {
+  let shake = 0;
+  if (balloonsSize >= warningSize) {
+    shake = random(-9, 9) * blow;
+  }
+
+  let balloonHeight = balloonsSize * 1.25;
+  let bottom = balloonHeight / 2;
+  let balloonColor = lerpColor(color(116, 60, 208), color(255, 72, 143), blow);
+
+  push();
+  translate(width / 2 + shake, 205);
+
+  stroke(80, 55, 110);
+  strokeWeight(3);
+  line(0, bottom, -8, bottom + 38);
+
+  noStroke();
+  fill(balloonColor);
+  ellipse(0, 0, balloonsSize, balloonHeight);
+  triangle(0, bottom - 3, -7, bottom + 8, 7, bottom + 8);
+
+  fill(255, 175);
+  ellipse(
+    -balloonsSize * 0.21,
+    -balloonHeight * 0.2,
+    balloonsSize * 0.13,
+    balloonHeight * 0.23
+  );
+
+  pop();
+}
+
+function drawBurst() {
+  burstFrame++;
+  let distance = 18 + burstFrame * 5;
+  let opacity = max(0, 255 - burstFrame * 9);
+
+  noStroke();
+  fill(255, 72, 143, opacity);
+
+  for (let i = 0; i < 12; i++) {
+    let angle = TWO_PI / 12 * i;
+    let x = width / 2 + cos(angle) * distance;
+    let y = 205 + sin(angle) * distance;
+    triangle(x, y - 8, x - 6, y + 5, x + 7, y + 3);
   }
 }
